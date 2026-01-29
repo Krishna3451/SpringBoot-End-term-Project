@@ -1,0 +1,85 @@
+spring:
+  application:
+    name: event-booking-platform
+
+  datasource:
+    url: jdbc:postgresql://ep-damp-hat-ahmioob9-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require
+    username: neondb_owner
+    password: npg_zpe29goCJnGE
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVERS:localhost:9092}
+    consumer:
+      group-id: event-booking-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: com.eventbooking.event
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+jwt:
+  secret: ${JWT_SECRET:aVeryLongSecretKeyThatIsAtLeast256BitsForHS256Algorithm}
+  expiration: 86400000
+
+razorpay:
+  key:
+    id: ${RAZORPAY_KEY_ID:}
+    secret: ${RAZORPAY_KEY_SECRET:}
+  webhook:
+    secret: ${RAZORPAY_WEBHOOK_SECRET:}
+
+cloudinary:
+  cloud-name: dhqc8pbox
+  api-key: "262349562834564"
+  api-secret: GYCasQpWvEyzvGNmFg_hir98PFs
+
+postmark:
+  server-token: 89917b98-35d1-4525-a090-7133109f44a7
+
+email:
+  from: noreply@jeeorbit.com
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    com.eventbooking: INFO
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
+
+server:
+  port: 8080
